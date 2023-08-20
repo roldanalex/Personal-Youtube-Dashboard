@@ -1,0 +1,168 @@
+---
+title: 'Personal Youtube Feed Pipeline'
+output: html_document
+editor_options:
+  chunk_output_type: console
+resource_files:
+- .Renviron
+---
+  
+This notebook wrangles **personal Youtube feed data** and store further analytics.
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE, echo = FALSE, cache = FALSE
+  )
+
+library(readr)
+library(dplyr)
+library(stringr)
+library(DT)
+library(aws.s3)
+library(httr2)
+library(plyr)
+library(tidyselect)
+library(tidyr)
+
+```
+
+## Data Wrangling
+
+At this step, app will pull **Youtube personal feed data** from CSV file.
+
+```{r, get_csv_data}
+
+source("./functions.R")
+# * Read personal channel data
+personal_channels <- read_csv("./data/personal-channels-yt.csv")
+
+personal_channels |>
+  select(-image) |>
+  head(10) |>
+    DT::datatable(
+      extensions = c("FixedHeader", "FixedColumns"),
+      options = list(
+        scrollX = TRUE,
+        dom = 'Bfrtip',
+        pageLength = 15,
+        fixedColumns = list(leftColumns = 2),
+        searching = FALSE,
+        columnDefs = list(
+          list(visible = FALSE,
+              targets = c(0)),
+          list(className = 'dt-center', targets = "_all"))
+        ),
+      escape = FALSE
+      ) |> 
+    DT::formatStyle(
+      c(
+        "chapter",
+        "id"
+      ),
+      "white-space"="nowrap")
+
+```
+
+For this step, **Youtube video data** will be pulled using *Youtube API* for each of the channels on the CSV file.
+
+```{r, wrangle data}
+
+personal_yt_urls <- personal_channels |>
+  dplyr::mutate(
+    feed = paste0("https://www.youtube.com/feeds/videos.xml?channel_id=", id),
+    feed_url = paste0("yt:channel:", id),
+    channel_image_url = paste0(
+      "<img src='",
+      image,
+      "' alt='Hex Sticker for Chapter' width='40'></img>",
+      " <a href='https://www.youtube.com/channel/",
+      id,
+      "' target='_blank'>",
+      chapter,
+      "</a><br>"
+    ),
+  )
+
+video_data <- NULL
+
+for (i in seq_len(nrow(personal_yt_urls))) {
+  tmp <-
+    personal_yt_urls[i, ]["id"] |>
+    dplyr::pull() |>
+    list_channel_vids(
+      part = "snippet",
+      config = list("maxResults" = 200)
+      # auth = "key"
+    )
+
+  video_data <- dplyr::bind_rows(video_data, tmp)
+}
+
+yt_data_final <- video_data |>
+  dplyr::left_join(
+    personal_yt_urls,
+    by = join_by("snippet.channelId" == "id"))
+
+# * Create final dataset
+yt_data_wrangled <- yt_data_final |>
+  dplyr::mutate(
+    video_url = paste0(
+      "<a href='https://www.youtube.com/watch?v=",
+      snippet.resourceId.videoId,
+      "' target='_blank'>",
+      snippet.title,
+      "</a>"
+    ),
+    channel_url = paste0(
+      "<img src='",
+      image,
+      "' alt='Hex Sticker for Chapter' width='40'></img>",
+      "<a href='https://www.youtube.com/channel/",
+      snippet.channelId,
+      "' target='_blank'>",
+      chapter,
+      "</a>"
+    ),
+    date = as.Date(str_sub(snippet.publishedAt, 1, 10))
+  ) %>%
+  dplyr::arrange(desc(snippet.publishedAt)) |>
+  dplyr::select(date, chapter, channel_url, video_url, channel_image_url)
+
+yt_data_wrangled |>
+  head(10) |>
+  DT::datatable(
+    escape = F,
+    rowname = F,
+    options = list(page_length = 100,
+                   dom = '<"top"lip>t')
+  )
+
+```
+
+Finally, final datasets will be stored into S3 bucket.
+
+```{r store_data}
+
+# create s3 connection
+Sys.setenv(
+  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
+  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  "AWS_DEFAULT_REGION" = "us-west-1"
+)
+
+# personal bucket
+yt_app_bucket <- Sys.getenv("s3ytfeedapp")
+
+# store wrangled data into S3 bucket
+s3saveRDS(
+  yt_data_wrangled,
+  "yt_data_wrangled.rds", yt_app_bucket)
+
+s3saveRDS(
+  yt_data_final,
+  "yt_data_final.rds", yt_app_bucket)
+
+```
+
+Wrangling Complete! 🎉
