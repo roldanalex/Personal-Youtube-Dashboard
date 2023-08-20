@@ -6,6 +6,6 @@
 /app/.Renviron
 .lintr
 /etl_pipeline/.Renviron
-/etl_pipeline/ETL_Pipeline_files
+/etl_pipeline/ETL Pipeline_files/
 /etl_pipeline/rsconnect
 /*.html
