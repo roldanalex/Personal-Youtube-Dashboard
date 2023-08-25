@@ -1,0 +1,20 @@
+Package: Personal-Youtube-Dashboard
+Title: Load initial packages
+Version: 0.0.0.9000
+Authors@R: 
+    person("Alexis", "Roldan", , "alexis.m.roldan.ds@gmail.com", role = c("aut", "cre")
+Description: Automated Quarto report for personal YouTube videos.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports: 
+    aws.s3,
+    dplyr,
+    DT,
+    httr2,
+    plyr,
+    readr,
+    stringr,
+    tidyr,
+    tidyselect
