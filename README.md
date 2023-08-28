@@ -22,5 +22,7 @@ Screenshot below show app mobile version.
 ## Configuration
 Create a `.Renviron` file and store your **Youtube & AWS Keys.**
 ```shell
-api_key <- <Your API Key>
+youtube_api_key <- <Your API Key>
+aws_secret_key <- <Your API Key>
+aws_key <- <Your API Key>
 ```
