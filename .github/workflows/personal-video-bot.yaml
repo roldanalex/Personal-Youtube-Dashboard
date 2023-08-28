@@ -12,6 +12,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
       YT_S3_BUCKET: ${{ secrets.AWS_S3 }}
+      YOUTUBE_KEY: ${{ secrets.YOUTUBE_KEY }}
     steps:
       - uses: actions/checkout@v3
         with:
