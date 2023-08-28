@@ -36,8 +36,9 @@ page_sidebar(
           href = "mailto:alexis.m.roldan.ds@gmail.com",
           tags$b("Email me"),
           class = "externallink",
-          style = "color: white; text-decoration: none")
-        ),
+          style = "color: white; text-decoration: none"
+        )
+      ),
       style = "
         position:fixed;
         text-align:center;
