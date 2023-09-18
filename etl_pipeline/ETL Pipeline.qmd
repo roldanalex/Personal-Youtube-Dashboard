@@ -160,6 +160,7 @@ s3saveRDS(
   "yt_data_wrangled.rds",
   "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
   "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  region = "us-west-1",
   yt_app_bucket
 )
 
@@ -167,6 +168,7 @@ s3saveRDS(
   yt_data_final,
   "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
   "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  region = "us-west-1",
   "yt_data_final.rds",
   yt_app_bucket
 )
