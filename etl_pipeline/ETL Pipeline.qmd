@@ -144,13 +144,6 @@ Finally, final datasets will be stored into S3 bucket.
 
 ```{r store_data}
 
-# create s3 connection
-# Sys.setenv(
-#   "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
-#   "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
-#   "AWS_DEFAULT_REGION" = "us-west-1"
-# )
-
 # personal bucket
 yt_app_bucket <- Sys.getenv("s3ytfeedapp")
 
