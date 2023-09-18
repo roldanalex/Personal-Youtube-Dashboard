@@ -125,7 +125,7 @@ yt_data_wrangled <- yt_data_final |>
       "</a>"
     ),
     date = as.Date(str_sub(snippet.publishedAt, 1, 10))
-  ) %>%
+  ) |>
   dplyr::arrange(desc(snippet.publishedAt)) |>
   dplyr::select(date, chapter, channel_url, video_url, channel_image_url)
 
@@ -145,11 +145,11 @@ Finally, final datasets will be stored into S3 bucket.
 ```{r store_data}
 
 # create s3 connection
-Sys.setenv(
-  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
-  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
-  "AWS_DEFAULT_REGION" = "us-west-1"
-)
+# Sys.setenv(
+#   "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
+#   "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+#   "AWS_DEFAULT_REGION" = "us-west-1"
+# )
 
 # personal bucket
 yt_app_bucket <- Sys.getenv("s3ytfeedapp")
@@ -157,11 +157,19 @@ yt_app_bucket <- Sys.getenv("s3ytfeedapp")
 # store wrangled data into S3 bucket
 s3saveRDS(
   yt_data_wrangled,
-  "yt_data_wrangled.rds", yt_app_bucket)
+  "yt_data_wrangled.rds",
+  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
+  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  yt_app_bucket
+)
 
 s3saveRDS(
   yt_data_final,
-  "yt_data_final.rds", yt_app_bucket)
+  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
+  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  "yt_data_final.rds",
+  yt_app_bucket
+)
 
 ```
 
