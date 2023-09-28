@@ -145,22 +145,22 @@ Finally, final datasets will be stored into S3 bucket.
 ```{r store_data}
 
 # personal bucket
-yt_app_bucket <- Sys.getenv("s3ytfeedapp")
+yt_app_bucket <- Sys.getenv("yt_app_bucket")
 
 # store wrangled data into S3 bucket
 s3saveRDS(
   yt_data_wrangled,
   "yt_data_wrangled.rds",
-  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
-  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  "AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"),
   region = "us-west-1",
   yt_app_bucket
 )
 
 s3saveRDS(
   yt_data_final,
-  "AWS_ACCESS_KEY_ID" = Sys.getenv("personal_aws_access_key"),
-  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("personal_aws_secret_key"),
+  "AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+  "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"),
   region = "us-west-1",
   "yt_data_final.rds",
   yt_app_bucket
