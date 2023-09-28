@@ -28,6 +28,6 @@ jobs:
           Rscript -e 'rmarkdown::render("etl_pipeline/ETL Pipeline.qmd")'
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git add etl_pipeline/ETL Pipeline.html
+          git add etl_pipeline/ETL-Pipeline.html
           git commit -m '[Bot] Render and commit Quarto' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
