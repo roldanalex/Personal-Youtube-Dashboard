@@ -33,7 +33,6 @@ function(input, output, session) {
   height = "1000",
   options = list(
     scrollX = TRUE,
-    # pageLength = 9,
     dom = "Bfrtip",
     searching = TRUE,
     columnDefs = list(

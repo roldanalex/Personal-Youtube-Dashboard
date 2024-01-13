@@ -29,7 +29,7 @@ page_sidebar(
   tags$footer(
     fluidRow(
       column(4, "© Alexis Roldan - 2023"),
-      column(4, "Personal Youtube Dashboard v1.0.2"),
+      column(4, "Personal Youtube Dashboard v1.0.3"),
       column(
         4,
         tags$a(
