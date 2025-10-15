@@ -9,3 +9,5 @@
 /etl_pipeline/ETL Pipeline_files/
 /etl_pipeline/rsconnect
 /*.html
+/.quarto/
+**/*.quarto_ipynb
